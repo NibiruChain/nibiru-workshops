@@ -1,0 +1,48 @@
+/* @theme slides-marp-nibiru-dark */
+/* --------------------------- Fonts ---------------------------  */
+@import url("https://fonts.googleapis.com/css?family=DM+Sans:400,700|Consolas:400,700|Montserrat:400,700");
+
+@import 'default';
+
+/* https://chris-ayers.com/2023/03/31/customizing-marp */
+
+:root {
+  font-family: "Montserrat";
+  --color-text: #e9f3f6;
+  color: var(--color-text);
+
+  /* color-accent-fg: dictates the <a> text color. */
+  --color-accent-fg: #4795a9;
+
+  background-image: url(./assets/bg-dark.png);
+  background-size: 100% ;
+}
+
+/* https://marpit.marp.app/theme-css?id=header-and-footer */
+header, footer {
+  position: absolue;
+}
+
+/* outer slide css */
+section {
+  position: absolute;
+  justify-content: flex-start; /* defaults go in theme */
+}
+
+
+br {
+  display: none;
+}
+
+code {
+  font-family: "Consolas", monospace;
+}
+
+h1 {
+  color: var(--color-text);
+  /* align-self: center; */
+  align-content: center;
+  padding-top: 22vh;
+}
+
+/* #8a47ff from design palette */
