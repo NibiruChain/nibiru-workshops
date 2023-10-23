@@ -7,6 +7,26 @@
 
 ---
 
+## CosmWasm smart Contracts
+
+- Contracts are Rust crates
+- Workshop: Walk through a simple contract, end-to-end
+
+## CosmWasm Benefits
+
+1. Security guarantees from the "Actor Model": Isolated State + Sequential
+   Message Processing
+2. Perform and safety guarantees of Wasm VM
+3. Benefit from advancements in Rust tooling
+
+---
+
+## No need to design around reentrancy
+
+![](./assets/reentrancy.png)
+
+---
+
 ## Install Rust
 
 ```bash
@@ -63,17 +83,176 @@ curl -s https://get.nibiru.fi/pricefeeder! | bash
 
 ---
 
+## Setup keys
 
+```bash
+just setup-env
+just add-key
+# nibid keys list 
+```
+
+```json
+  {
+    "name": "test-me",
+    "type": "local",
+    "address": "nibi1zaavvzxez0elundtn32qnk9lkm8kmcsz44g7xl",
+    "pubkey": "{\"@type\":\"/cosmos.crypto.secp256k1.PubKey\",\"key\":\"AvzwBOriY8sVwEXrXf1gXanhT9imlfWeUWLQ8pMxrRsg\"}"
+  }
+```
 
 --- 
 
 ## Compiling contracts
 
-- [ ] just wasm-all
-- [ ] just tidy 
+```bash
+just wasm-all
+```
 
+- Just requires `docker`
+- This command will compile all smart contracts in the workspace.
+
+
+---
+
+## Run a local Nibiru Network
+
+```bash
+just run-nibiru
+# This runs `nibid start`
+```
+
+What happens?
+- Chain running with a single validator node
+- The mnemonic to use this account is known
+- The account is bootstrapped with large amounts of funds
 
 --- 
+
+## Wasm commands on the `nibid` CLI
+
+```bash
+nibid tx wasm --help
+```
+
+- `nibid tx wasm store`: Deploy wasm bytecode to chain's [store].
+- `nibid tx wasm inst` : [Inst]antiate contract
+- `nibid tx wasm execute`: [Execute] transaction by invoking a contract 
+
+---
+
+## Wasm Commands [1]: Deploy
+
+```bash
+nibid tx wasm store $WASM --from $KEY_NAME --gas=2500000  \
+  --fees=1$NIBI | jq > store_resp.json
+```
+
+```bash
+WASM="artifacts/todolist.wasm"
+KEY_NAME="test-me"
+local MNEM="..." 
+echo "$MNEM" | nibid keys add $KEY_NAME --recover --keyring-backend test
+```
+
+<!-- local MNEM="guard cream sadness conduct invite crumble clock pudding hole grit liar hotel maid produce squeeze return argue turtle know drive eight casino maze host"  -->
+
+---
+
+## Wasm Commands [2]: Insantiate
+
+```bash
+# template
+nibid tx wasm inst [code-id] [inst-msg-json] --label="..." --no-admin
+--from="$KEY_NAME" | jq > inst.json
+```
+
+```bash
+nibid tx wasm inst 1 "{}" --label="todo list contract" --no-admin
+--from="$KEY_NAME" | jq > inst.json
+```
+
+Then, grab your contract address from `inst.json`.
+```bash
+CONTRACT="nibi14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9ssa9gcs"
+```
+
+---
+
+## Wasm Commands [3]: Execute
+
+```bash
+nibid tx wasm execute $CONTRACT "$(cat exec_add.json)" \
+  --from="$KEY_NAME" --gas=8000000 --fees=200000unibi \ 
+  -y | jq > out0.json
+```
+
+```rust
+pub enum ExecuteMsg {
+    Add { task: String },
+    Toggle { task_id: u64 },
+    Delete { task_id: u64 },
+}
+```
+
+```json
+# exec_add.json
+{ "add": { "task": "Do 100 LeetCode practice problems" } }
+```
+
+--- 
+
+## Wasm Commands [4]: Queries
+
+```bash
+nibid q wasm contract contract-smart smart [contract_bech32] [query_json]
+```
+
+```rust
+#[derive(cosmwasm_schema::QueryResponses)]
+pub enum QueryMsg {
+    /// Fetches all of the tasks
+    #[returns(Vec<TodoTask>)]
+    Todos {},
+
+    /// Fetch single task with the given ID.
+    #[returns(TodoTask)]
+    TodoTask { id: u64 },
+
+    /// Fetch all tasks marked as done after the given `since_id`.
+    #[returns(Vec<TodoTask>)]
+    CompletedTasks { since_id: Option<u64> },
+}
+```
+
+---
+
+## Wasm Commands [5]: Queries
+
+```bash
+# nibid q wasm contract contract-smart smart [contract_bech32] [query_json]
+nibid q wasm contract-state smart $CONTRACT '{ "todos": {} }'
+```
+
+```rust
+#[derive(cosmwasm_schema::QueryResponses)]
+pub enum QueryMsg {
+    /// Fetches all of the tasks
+    #[returns(Vec<TodoTask>)]
+    Todos {},
+
+    /// Fetch single task with the given ID.
+    #[returns(TodoTask)]
+    TodoTask { id: u64 },
+
+    /// Fetch all tasks marked as done after the given `since_id`.
+    #[returns(Vec<TodoTask>)]
+    CompletedTasks { since_id: Option<u64> },
+}
+```
+
+---
+
+## Appendix
 
 Instructions to install Go:
 https://go.dev/doc/install
@@ -84,13 +263,14 @@ https://get.nibiru.fi/pricefeeder
 https://get.nibiru.fi/?type=script
 https://get.nibiru.fi/pricefeeder?type=script
 
-Local Network
-
-- [ ] Run the network
 
 ---
 
-What happens?
-- Chain running with a single validator node
-- The mnemonic to use this account is known
-- The account is bootstrapped with large amounts of funds
+## Formatting and Linting
+
+```bash
+just tidy
+```
+
+- Includes linter and formatter for Rust code. 
+

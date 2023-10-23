@@ -78,3 +78,33 @@ tidy:
 # Format, lint, update dependencies, and test
 tidy-update: build-update
   just tidy
+
+# Run local instance of the Nibiru blockchain
+run-nibiru:
+  bash scripts/localnet.sh --no-build
+
+run-pricefeed:
+  bash scripts/run_pricefeed.sh
+
+# Install wasm target, nibid, and pricefeeder
+install-everything:
+  rustup target add wasm32-unknown-unknown
+  curl -s https://get.nibiru.fi/! | bash
+  curl -s https://get.nibiru.fi/pricefeeder! | bash
+
+add-key:
+  #!/usr/bin/env bash
+  export KEY_NAME="test-me"
+  add_key() {
+    MNEM="guard cream sadness conduct invite crumble clock pudding hole grit liar hotel maid produce squeeze return argue turtle know drive eight casino maze host" 
+    echo "$MNEM" | nibid keys add $KEY_NAME --recover --keyring-backend test
+  }
+  add_key 2> /dev/null
+  nibid keys list | jq
+
+# Set up keys and environment variables for nibid
+setup-env:
+  #!/usr/bin/env bash
+  source scripts/setup_env.sh
+  echo "WASM: $WASM"
+  echo "KEY_NAME: $KEY_NAME"

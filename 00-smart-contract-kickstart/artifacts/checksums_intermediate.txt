@@ -1,0 +1,1 @@
+a89791fa3920aa9fcf98db4e740c8c6f0e8863fa63d744cd06801f05cc5ffc2a  target/wasm32-unknown-unknown/release/todolist.wasm
