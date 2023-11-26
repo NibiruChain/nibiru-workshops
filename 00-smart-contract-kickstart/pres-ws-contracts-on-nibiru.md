@@ -7,6 +7,15 @@
 
 ---
 
+**Rust** is the programming language used to create smart contracts for the Nibiru
+blockchain. 
+
+1. A statically typed, compiled language with capabilities for embedded systems
+2. Memory safe without garbage collection through the "borrow"-checker system.
+3. Blazingly fast
+
+---
+
 ## CosmWasm smart Contracts
 
 - Contracts are Rust crates
@@ -54,18 +63,18 @@ Learn more in [The Cargo Book](https://doc.rust-lang.org/cargo/getting-started/f
 
 ---
 
-## Install Everything Else
+## Install Dependencies
 
 ```bash 
-just install-everything
+just install
 ```
 
 --- 
 
-## Install Everything Else
+## Install Dependencies
 
 ```bash 
-just install-everything
+just install
 ```
 
 Under the hood, this will run the following commands automatically.
@@ -252,7 +261,11 @@ pub enum QueryMsg {
 
 ---
 
-## Appendix
+# Appendix
+
+---
+
+## Appendix [1]
 
 Instructions to install Go:
 https://go.dev/doc/install
@@ -266,11 +279,11 @@ https://get.nibiru.fi/pricefeeder?type=script
 
 ---
 
-## Formatting and Linting
+## Appendix [2]
+
+Formatting and Linting
 
 ```bash
 just tidy
 ```
-
-- Includes linter and formatter for Rust code. 
 

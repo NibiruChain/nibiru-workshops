@@ -5,11 +5,15 @@ setup:
   #!/usr/bin/env bash
   just -l
 
+# Install wasm target, nibid, and pricefeeder
 install:
   # https://crates.io/crates/clippy
   rustup component add clippy
   # https://crates.io/crates/cargo-llvm-cov
   cargo install cargo-llvm-cov
+  rustup target add wasm32-unknown-unknown
+  curl -s https://get.nibiru.fi/@v0.21.11! | bash
+  curl -s https://get.nibiru.fi/pricefeeder! | bash
 
 wasm-all:
   bash scripts/wasm-out.sh
@@ -86,12 +90,6 @@ run-nibiru:
 run-pricefeed:
   bash scripts/run_pricefeed.sh
 
-# Install wasm target, nibid, and pricefeeder
-install-everything:
-  rustup target add wasm32-unknown-unknown
-  curl -s https://get.nibiru.fi/! | bash
-  curl -s https://get.nibiru.fi/pricefeeder! | bash
-
 add-key:
   #!/usr/bin/env bash
   export KEY_NAME="test-me"
@@ -108,3 +106,34 @@ setup-env:
   source scripts/setup_env.sh
   echo "WASM: $WASM"
   echo "KEY_NAME: $KEY_NAME"
+
+# Run the server for the slide presentation
+slides:
+  #!/usr/bin/env bash
+  source scripts/lib.sh
+  if ! which_ok marp; then
+    echo "Installing @marp-team/marp-cli"
+  else 
+    marp --server . --theme theme.css 
+    exit 0
+  fi
+
+  binary=""
+  if ! which_ok bun && ! which_ok yarn && ! which_ok npm; then
+      echo "Neither bun, npm, nor yarn is installed."
+      # Install bun
+      curl -fsSL https://bun.sh/install | bash
+      binary="bun"
+  elif which_ok bun; then 
+      binary="bun"
+  elif which_ok yarn; then 
+      binary="yarn"
+  elif which_ok npm; then 
+      binary="npm"
+  else 
+    echo "Failed to initialize JS binary" >&2
+    exit 1 
+  fi
+  
+  $binary install @marp-team/marp-cli 
+  $binary run marp --server . --theme theme.css

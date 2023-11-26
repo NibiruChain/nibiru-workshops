@@ -1,0 +1,17 @@
+{
+  "name": "@nibiruchain/00-smart-contract-kickstart",
+  "module": "..",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@marp-team/marp-cli": "^3.4.0"
+  }
+}

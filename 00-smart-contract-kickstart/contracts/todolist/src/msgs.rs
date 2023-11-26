@@ -1,5 +1,4 @@
 use cosmwasm_schema::cw_serde;
-use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use crate::state::TodoTask;
@@ -9,7 +8,7 @@ pub struct InstantiateMsg {
     pub todos: Option<Vec<String>>,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[cw_serde]
 pub enum ExecuteMsg {
     Add { task: String },
 
