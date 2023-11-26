@@ -18,5 +18,5 @@ cargo install just
 
 ## Workshops
 
-- 0: [Smart Contract Kickstart](./00-smart-contract-kickstart/pres-ws-contracts-on-nibiru.md)
+- 0: [Smart Contract Kickstart](./00-smart-contract-kickstart/README.md)
 
