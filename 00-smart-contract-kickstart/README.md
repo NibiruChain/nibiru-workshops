@@ -1,17 +1,20 @@
-# @nibiruchain/00-smart-contract-kickstart
+# workshops/00-smart-contract-kickstart
+
+## Show all commands
 
 Run `just` to see list out all of the available commands.
 
-### To run the tutorial
+## Running the Tutorial
 
-Open the slides:
+1. Open the slides:
 
-```
-just slides
-```
+    ```bash
+    just slides
+    ```
 
-Then, open the localhost endpoint and select the presentation:
+2. Then, open the localhost endpoint and select the presentation:
 
-> "[ INFO ] [Server mode] Start server listened at http://localhost:8080/ ..."
+    > "[ INFO ] [Server mode] Start server listened at http://localhost:8080/ ..."
 
-<img src="./assets/2023-wk48-slides.png">
+    <img src="./assets/2023-wk48-slides.png">
+
